@@ -1,16 +1,6 @@
-def move_cursor_up(lines: int):
+def get_move_cursor_up_as_string(lines: int):
     if lines > 0:
         return '\033[' + str(lines) + 'A'
-    else:
-        return ""
-
-
-def move_cursor_down(lines: int):
-    if lines > 0:
-        out = ""
-        for i in range(lines):
-            out += "\n"
-        return out
     else:
         return ""
 
