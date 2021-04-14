@@ -1,7 +1,7 @@
 import sys
 from time import sleep
 
-from src.Loggerz.Loggerz import Loggerz
+from loggerz.Loggerz import Loggerz
 
 LogLevel = Loggerz.LogLevel
 

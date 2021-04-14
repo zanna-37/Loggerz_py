@@ -4,10 +4,8 @@ services:
   python-env:
     image: python:3
     tty: true
-    environment:
-      - PYTHONPATH=/project
     volumes:
       - .:/project
     working_dir: /project
-    command: python ./src/main.py
+    command: python ./main.py
  

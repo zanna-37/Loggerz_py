@@ -6,9 +6,9 @@ from datetime import datetime
 from enum import IntEnum
 from multiprocessing import Lock
 
-from src.Loggerz.Singleton import Singleton
-from src.TerminalUtils import TerminalUtils
-from src.TerminalUtils.TerminalUtils import TerminalColors, TerminalMovements
+from loggerz.singleton.Singleton import Singleton
+from loggerz.terminal_utils import TerminalUtils
+from loggerz.terminal_utils.TerminalUtils import TerminalColors, TerminalMovements
 
 
 class State(IntEnum):
