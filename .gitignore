@@ -1,3 +1,6 @@
 .idea
 .venv
 __pycache__
+/leggerz.egg-info/
+/dist/
+/build/

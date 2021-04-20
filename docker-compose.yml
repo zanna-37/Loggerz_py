@@ -7,5 +7,5 @@ services:
     volumes:
       - .:/project
     working_dir: /project
-    command: python ./main.py
- 
+    # command: python ./main.py
+    command: make dist
