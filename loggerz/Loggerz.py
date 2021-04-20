@@ -29,7 +29,7 @@ def erase_next_n_lines_and_rewind_as_string(erase_next_n_lines):
 class Loggerz(metaclass=Singleton):
     def __init__(self):
         self.__mutex = Lock()
-        self.__target_log_level = Loggerz.LogLevel.INFO
+        self.__target_log_level = LogLevel.INFO
         self.__long_prefix = False
         self.__print_timestamp = True
         self.__originator_width = 10
@@ -51,7 +51,7 @@ class Loggerz(metaclass=Singleton):
 
         self.__do_print(output)
 
-    def blank_line(self, log_level: Loggerz.LogLevel):
+    def blank_line(self, log_level: LogLevel):
         if self.__should_be_logged(log_level):
             self.__prepare_and_print("\n")
 
@@ -66,7 +66,7 @@ class Loggerz(metaclass=Singleton):
 
         if sticky:
             self.current_sticky_message = new_log  # Do not print but store for later
-        elif new_log.log_level == Loggerz.LogLevel.EPHEMERAL:
+        elif new_log.log_level == LogLevel.EPHEMERAL:
             self.ephemeral_logs.append(new_log)  # Do not print but store for later
             while len(self.ephemeral_logs) > self.max_ephemeral_messages:  # Trim old ephemeral logs
                 self.ephemeral_logs.popleft()
@@ -82,7 +82,7 @@ class Loggerz(metaclass=Singleton):
     def __do_remove_sticky(self):
         self.current_sticky_message = None
 
-    def __should_be_logged(self, log_level: Loggerz.LogLevel) -> bool:
+    def __should_be_logged(self, log_level: LogLevel) -> bool:
         return log_level >= self.target_log_level
 
     def __prepare_and_print(self, fun_to_call_or_output, args=None):
@@ -181,7 +181,7 @@ class Loggerz(metaclass=Singleton):
         return output
 
     def set_target_log_level(self, target_log_level: LogLevel):
-        if target_log_level >= Loggerz.LogLevel.EPHEMERAL:
+        if target_log_level >= LogLevel.EPHEMERAL:
             self.target_log_level = target_log_level
 
     def set_long_prefix(self, long_prefix: bool):
@@ -213,23 +213,23 @@ class Loggerz(metaclass=Singleton):
         self.__print_timestamp = print_timestamp
 
     def __get_log_prefix_as_string(self, log_level) -> str:
-        if log_level == Loggerz.LogLevel.EPHEMERAL:
+        if log_level == LogLevel.EPHEMERAL:
             return "EPHEMER" if self.__long_prefix else "_"
-        elif log_level == Loggerz.LogLevel.DEBUG:
+        elif log_level == LogLevel.DEBUG:
             return "DEBUG  " if self.__long_prefix else "|"
-        elif log_level == Loggerz.LogLevel.VERBOSE:
+        elif log_level == LogLevel.VERBOSE:
             return "VERBOSE" if self.__long_prefix else ":"
-        elif log_level == Loggerz.LogLevel.INFO:
+        elif log_level == LogLevel.INFO:
             return "INFO   " if self.__long_prefix else "."
-        elif log_level == Loggerz.LogLevel.TITLE:
+        elif log_level == LogLevel.TITLE:
             return "TITLE  " if self.__long_prefix else "#"
-        elif log_level == Loggerz.LogLevel.SUCCESS:
+        elif log_level == LogLevel.SUCCESS:
             return "SUCCESS" if self.__long_prefix else "+"
-        elif log_level == Loggerz.LogLevel.WARNING:
+        elif log_level == LogLevel.WARNING:
             return "WARNING" if self.__long_prefix else "!"
-        elif log_level == Loggerz.LogLevel.ERROR:
+        elif log_level == LogLevel.ERROR:
             return "ERROR  " if self.__long_prefix else "-"
-        elif log_level == Loggerz.LogLevel.FATAL:
+        elif log_level == LogLevel.FATAL:
             return "FATAL  " if self.__long_prefix else "x"
         else:
             return "UNKNOWN" if self.__long_prefix else "?"
@@ -254,23 +254,23 @@ class Loggerz(metaclass=Singleton):
             if sticky:
                 return TerminalColors.BG_GREEN + TerminalColors.BLACK
 
-            if log_level == Loggerz.LogLevel.EPHEMERAL:
+            if log_level == LogLevel.EPHEMERAL:
                 return TerminalColors.LIGHT_BLUE
-            elif log_level == Loggerz.LogLevel.DEBUG:
+            elif log_level == LogLevel.DEBUG:
                 return TerminalColors.DARK_GREY
-            elif log_level == Loggerz.LogLevel.VERBOSE:
+            elif log_level == LogLevel.VERBOSE:
                 return TerminalColors.DARK_GREY if before_prefix else ""
-            elif log_level == Loggerz.LogLevel.INFO:
+            elif log_level == LogLevel.INFO:
                 return "" if before_prefix else ""  # Don't have color
-            elif log_level == Loggerz.LogLevel.TITLE:
+            elif log_level == LogLevel.TITLE:
                 return TerminalColors.LIGHT_YELLOW
-            elif log_level == Loggerz.LogLevel.SUCCESS:
+            elif log_level == LogLevel.SUCCESS:
                 return TerminalColors.LIGHT_GREEN if before_prefix else ""
-            elif log_level == Loggerz.LogLevel.WARNING:
+            elif log_level == LogLevel.WARNING:
                 return TerminalColors.LIGHT_YELLOW if before_prefix else ""
-            elif log_level == Loggerz.LogLevel.ERROR:
+            elif log_level == LogLevel.ERROR:
                 return TerminalColors.LIGHT_RED if before_prefix else ""
-            elif log_level == Loggerz.LogLevel.FATAL:
+            elif log_level == LogLevel.FATAL:
                 return TerminalColors.LIGHT_RED
 
     def __get_color_reset_string_for(self, log_level: LogLevel, sticky: bool, before_message: bool):
@@ -280,23 +280,23 @@ class Loggerz(metaclass=Singleton):
             if sticky:
                 return "" if before_message else TerminalMovements.ERASE_LINE_FORWARD + TerminalColors.BG_DEFAULT + TerminalColors.DEFAULT
 
-            if log_level == Loggerz.LogLevel.EPHEMERAL:
+            if log_level == LogLevel.EPHEMERAL:
                 return "" if before_message else TerminalColors.DEFAULT
-            elif log_level == Loggerz.LogLevel.DEBUG:
+            elif log_level == LogLevel.DEBUG:
                 return "" if before_message else TerminalColors.DEFAULT
-            elif log_level == Loggerz.LogLevel.VERBOSE:
+            elif log_level == LogLevel.VERBOSE:
                 return TerminalColors.DEFAULT if before_message else ""
-            elif log_level == Loggerz.LogLevel.INFO:
+            elif log_level == LogLevel.INFO:
                 return "" if before_message else ""  # Don't have color
-            elif log_level == Loggerz.LogLevel.TITLE:
+            elif log_level == LogLevel.TITLE:
                 return "" if before_message else TerminalColors.DEFAULT
-            elif log_level == Loggerz.LogLevel.SUCCESS:
+            elif log_level == LogLevel.SUCCESS:
                 return TerminalColors.DEFAULT if before_message else ""
-            elif log_level == Loggerz.LogLevel.WARNING:
+            elif log_level == LogLevel.WARNING:
                 return TerminalColors.DEFAULT if before_message else ""
-            elif log_level == Loggerz.LogLevel.ERROR:
+            elif log_level == LogLevel.ERROR:
                 return TerminalColors.DEFAULT if before_message else ""
-            elif log_level == Loggerz.LogLevel.FATAL:
+            elif log_level == LogLevel.FATAL:
                 return "" if before_message else TerminalColors.DEFAULT
 
     def __re_add_color_string_after_endline(self, message: str, log_level: LogLevel, sticky: bool) -> str:
@@ -317,7 +317,7 @@ class Loggerz(metaclass=Singleton):
         return message
 
     class Logz():
-        def __init__(self, log_level: Loggerz.LogLevel, originator: str, message: str, timestamp: str, sticky: bool):
+        def __init__(self, log_level: LogLevel, originator: str, message: str, timestamp: str, sticky: bool):
             self.log_level = log_level
             self.originator = originator
             self.message = message
@@ -334,53 +334,54 @@ class Loggerz(metaclass=Singleton):
 
             return self.__number_of_lines
 
-    class LogLevel(IntEnum):
-        EPHEMERAL = 0
-        """
-        This should be used as additional and non-critical output that is meant to last for short time and then overwritten
-        """
 
-        DEBUG = 1
-        """
-        Use this only for debug logs. Link entering/exiting methods or state
-        which low level operation are being performed.
-        """
+class LogLevel(IntEnum):
+    EPHEMERAL = 0
+    """
+    This should be used as additional and non-critical output that is meant to last for short time and then overwritten
+    """
 
-        VERBOSE = 2
-        """
-        Use it for extra information. For example log a state change, or when the
-        program perform high level operation.
-        """
+    DEBUG = 1
+    """
+    Use this only for debug logs. Link entering/exiting methods or state
+    which low level operation are being performed.
+    """
 
-        INFO = 3
-        """
-        Use it to inform a potential user about what is going on. Use it only to
-        provide information targeted to a non-developer audience.
-        """
+    VERBOSE = 2
+    """
+    Use it for extra information. For example log a state change, or when the
+    program perform high level operation.
+    """
 
-        TITLE = 4
-        """
-        This should be used to print a title-like log
-        """
+    INFO = 3
+    """
+    Use it to inform a potential user about what is going on. Use it only to
+    provide information targeted to a non-developer audience.
+    """
 
-        SUCCESS = 5
-        """
-        Use it when something has succeeded and it is worth inform the user.
-        """
+    TITLE = 4
+    """
+    This should be used to print a title-like log
+    """
 
-        WARNING = 6
-        """
-        Use it to signal an unexpected situation that should not occur but does
-        not prevent the program to continue.
-        """
+    SUCCESS = 5
+    """
+    Use it when something has succeeded and it is worth inform the user.
+    """
 
-        ERROR = 7
-        """
-        Use it to signal that an error has occurred and the program will try to
-        continue anyway, so the output might be not what the user expect.
-        """
+    WARNING = 6
+    """
+    Use it to signal an unexpected situation that should not occur but does
+    not prevent the program to continue.
+    """
 
-        FATAL = 8
-        """
-        Use it to signal an unrecoverable error that makes the program stop.
-        """
+    ERROR = 7
+    """
+    Use it to signal that an error has occurred and the program will try to
+    continue anyway, so the output might be not what the user expect.
+    """
+
+    FATAL = 8
+    """
+    Use it to signal an unrecoverable error that makes the program stop.
+    """

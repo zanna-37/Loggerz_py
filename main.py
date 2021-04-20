@@ -1,9 +1,8 @@
 import sys
 from time import sleep
 
+from loggerz.Loggerz import LogLevel
 from loggerz.Loggerz import Loggerz
-
-LogLevel = Loggerz.LogLevel
 
 if __name__ == '__main__':
 
@@ -12,7 +11,7 @@ if __name__ == '__main__':
         print("Some features will not be available unless forcefully enabled")
 
     log = Loggerz()
-    log.set_target_log_level(Loggerz.LogLevel.EPHEMERAL)
+    log.set_target_log_level(LogLevel.EPHEMERAL)
     # log.set_enable_terminal_movements(False)
 
     log.blank_line(LogLevel.FATAL)
