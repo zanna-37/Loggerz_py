@@ -29,7 +29,8 @@ def erase_next_n_lines_and_rewind_as_string(erase_next_n_lines):
 
 class Loggerz(metaclass=Singleton):
     def __init__(self):
-        self.__mutex = Lock()
+        self.__print_mutex = Lock()
+        self.__volatile_lines_mutex = Lock()
         self.__target_log_level = LogLevel.INFO
         self.__long_prefix = False
         self.__print_timestamp = True
@@ -58,7 +59,9 @@ class Loggerz(metaclass=Singleton):
 
     def log(self, log_level: LogLevel, originator: str, message: str, sticky=False):
         if self.__should_be_logged(log_level):
+            self.__volatile_lines_mutex.acquire()  # TODO find a more performant way
             self.__prepare_and_print(self.__do_log, (log_level, originator, message, sticky))
+            self.__volatile_lines_mutex.release()  # TODO find a more performant way
 
     def __do_log(self, log_level: LogLevel, originator: str, message: str, sticky: bool) -> str:
         output = ""
@@ -102,9 +105,9 @@ class Loggerz(metaclass=Singleton):
         self.__do_print(output)
 
     def __do_print(self, output: str):
-        self.__mutex.acquire()
+        self.__print_mutex.acquire()
         print(output, end="")
-        self.__mutex.release()
+        self.__print_mutex.release()
 
     def __delete_volatile_lines_as_string(self) -> str:
         output = ""
