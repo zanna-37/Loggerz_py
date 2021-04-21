@@ -97,7 +97,8 @@ if __name__ == '__main__':
     sleep(1)
     log.log(LogLevel.EPHEMERAL, "main-eph", "ephemeral 11")
     sleep(1)
-    log.log(LogLevel.EPHEMERAL, "main-eph", "ephemeral 12")
+    log.log(LogLevel.EPHEMERAL, "main-eph",
+            "ephemeral 12 very loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong")
     sleep(1)
     log.log(LogLevel.EPHEMERAL, "main-eph", "ephemeral 13")
     sleep(1)

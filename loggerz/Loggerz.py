@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import shutil
 import sys
 from collections import deque
 from datetime import datetime
@@ -164,6 +165,11 @@ class Loggerz(metaclass=Singleton):
 
         # Message
         message = self.__add_pad_after_endline(log.message, len(prefix_symbol) + len(prefix_info), log.sticky)
+        if log.sticky or log.log_level == LogLevel.EPHEMERAL:
+            max_line_length, _ = shutil.get_terminal_size()
+            if max_line_length <= 0:
+                max_line_length = 80
+            message = self.__shorten_line(message, max_line_length - len(prefix_symbol) - len(prefix_info))
         if message.count('\n') > 0:
             message = self.__re_add_color_string_after_endline(message, log.log_level, log.sticky)
 
@@ -333,6 +339,24 @@ class Loggerz(metaclass=Singleton):
                     self.__number_of_lines += 1  # a sticky is always preceded by a blank line
 
             return self.__number_of_lines
+
+    def __shorten_line(self, message, columns):
+        output = ""
+        for line in message.splitlines(True):
+            add_endl = False
+            if line[-1] == "\n":
+                line = line[0:-1]
+                add_endl = True
+
+            if (columns - 1) > 0 and len(line) > columns - 1:
+                line = line[0:columns - 1] + "…"
+
+            output += line
+
+            if add_endl:
+                output += "\n"
+
+        return output
 
 
 class LogLevel(IntEnum):
