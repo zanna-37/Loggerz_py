@@ -58,9 +58,9 @@ class Loggerz(metaclass=Singleton):
 
     def log(self, log_level: LogLevel, originator: str, message: str, sticky=False):
         if self.__should_be_logged(log_level):
-            self.__volatile_lines_mutex.acquire()  # TODO find a more performant way
+            self.__volatile_lines_mutex.acquire()
             self.__prepare_and_print(self.__do_log, (log_level, originator, message, sticky))
-            self.__volatile_lines_mutex.release()  # TODO find a more performant way
+            self.__volatile_lines_mutex.release()
 
     def remove_sticky(self):
         self.__prepare_and_print(self.__do_remove_sticky)
