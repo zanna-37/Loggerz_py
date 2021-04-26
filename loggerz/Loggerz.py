@@ -48,10 +48,9 @@ class Loggerz(metaclass=Singleton):
         self.current_sticky_message = None
 
     def cleanup(self):
-        output = self.__delete_volatile_lines_as_string()
-        output += TerminalMovements.ERASE_SCREEN_FORWARD
-
-        self.__do_print(output)
+        self.remove_sticky()
+        self.remove_ephemerals()
+        self.__prepare_and_print(TerminalMovements.ERASE_SCREEN_FORWARD)
 
     def blank_line(self, log_level: LogLevel):
         if self.__should_be_logged(log_level):
@@ -62,6 +61,12 @@ class Loggerz(metaclass=Singleton):
             self.__volatile_lines_mutex.acquire()  # TODO find a more performant way
             self.__prepare_and_print(self.__do_log, (log_level, originator, message, sticky))
             self.__volatile_lines_mutex.release()  # TODO find a more performant way
+
+    def remove_sticky(self):
+        self.__prepare_and_print(self.__do_remove_sticky)
+
+    def remove_ephemerals(self):
+        self.__prepare_and_print(self.__do_remove_ephemerals)
 
     def __do_log(self, log_level: LogLevel, originator: str, message: str, sticky: bool) -> str:
         output = ""
@@ -80,11 +85,11 @@ class Loggerz(metaclass=Singleton):
 
         return output
 
-    def remove_sticky(self):
-        self.__prepare_and_print(self.__do_remove_sticky)
-
     def __do_remove_sticky(self):
         self.current_sticky_message = None
+
+    def __do_remove_ephemerals(self):
+        self.ephemeral_logs.clear()
 
     def __should_be_logged(self, log_level: LogLevel) -> bool:
         return log_level >= self.target_log_level
@@ -102,9 +107,6 @@ class Loggerz(metaclass=Singleton):
 
         output += self.__write_volatile_lines_as_string()
 
-        self.__do_print(output)
-
-    def __do_print(self, output: str):
         self.__print_mutex.acquire()
         print(output, end="")
         self.__print_mutex.release()

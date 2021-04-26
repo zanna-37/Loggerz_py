@@ -1,7 +1,7 @@
 import sys
 from time import sleep
 
-from loggerz.Loggerz import LogLevel
+from loggerz.Loggerz import LogLevel, State
 from loggerz.Loggerz import Loggerz
 
 if __name__ == '__main__':
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     log.set_long_prefix(False)
     sleep(2)
 
-    log.set_color_mode(False)
+    log.set_color_mode(State.OFF)
     log.blank_line(LogLevel.FATAL)
     log.log(LogLevel.TITLE, "main", "NO COLORS")
     log.log(LogLevel.DEBUG, "main-norm", "This is a DEBUG log")
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     log.log(LogLevel.WARNING, "main-norm", "This is a WARNING log")
     log.log(LogLevel.ERROR, "main-norm", "This is a ERROR log")
     log.log(LogLevel.FATAL, "main-norm", "This is a FATAL log")
-    log.set_color_mode(True)
+    log.set_color_mode(State.AUTO)
     sleep(2)
 
     log.blank_line(LogLevel.FATAL)
